@@ -1,36 +1,202 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Type-Native 🌍⌨️
 
-## Getting Started
+A free, multilingual online keyboard application supporting 94+ languages with 218+ keyboard layouts. Type in any language directly in your browser - no installation required!
 
-First, run the development server:
+[![Deploy to Cloudflare Pages](https://github.com/yourusername/type-native/actions/workflows/deploy.yml/badge.svg)](https://github.com/yourusername/type-native/actions/workflows/deploy.yml)
+
+## ✨ Features
+
+- 🌐 **94+ Languages** - From English to Inuktitut, we've got you covered
+- ⌨️ **218+ Keyboard Layouts** - Both English and French versions for each language
+- 🔄 **RTL Support** - Full right-to-left support for Arabic, Hebrew, Urdu, and more
+- 💾 **Auto-save** - Your text is automatically saved in your browser
+- 📋 **Quick Actions** - Copy, search on Google, YouTube, Amazon, and Twitter
+- 🎨 **Modern UI** - Clean, responsive design that works on all devices
+- 🚀 **Fast & Light** - Static site, loads instantly
+- 🔐 **Privacy-First** - All data stays in your browser
+
+## 🗣️ Supported Languages
+
+### Western & Northern Europe (18)
+English, German, French, Spanish, Italian, Portuguese, Dutch, Swedish, Danish, Norwegian, Finnish, Polish, Irish, Welsh, Icelandic, Estonian, Latvian, Lithuanian
+
+### Southern & Eastern Europe (16)
+Greek, Turkish, Russian, Ukrainian, Czech, Hungarian, Romanian, Croatian, Slovak, Slovenian, Serbian, Bosnian, Bulgarian, Belarusian, Maltese, Albanian, Macedonian
+
+### Middle East & North Africa (13)
+Arabic (+ 5 regional variants), Hebrew, Persian, Urdu, Pashto, Kurdish (Sorani & Kurmanji), Tifinagh
+
+### Central Asia (6)
+Kazakh, Tajik, Uzbek, Kyrgyz, Turkmen, Mongolian
+
+### South Asia (12)
+Hindi, Bengali (+ Bangladesh variant), Tamil, Punjabi, Gujarati, Telugu, Kannada, Malayalam, Odia, Sinhala, Divehi, Nepali, Tibetan
+
+### East & Southeast Asia (10)
+Japanese, Korean, Chinese (Taiwan), Thai, Vietnamese, Khmer, Burmese, Indonesian, Malay, Tagalog
+
+### Africa (7)
+Amharic, Tigrinya, Hausa, Swahili, Yoruba, Igbo, Zulu, Xhosa, Afrikaans
+
+### Oceania (3)
+Maori, Fijian, Samoan
+
+### Americas (1)
+Inuktitut
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 22 or higher
+- npm, yarn, or pnpm
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/type-native.git
+cd type-native
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Build static site
+npm run build
 
-## Learn More
+# The static files will be in the 'out' directory
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is configured for automatic deployment to Cloudflare Pages via GitHub Actions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Quick Setup
 
-## Deploy on Vercel
+1. **Set up GitHub Secrets**:
+   ```bash
+   cd .github
+   ./setup-secrets.sh
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Or manually add secrets** in GitHub Settings → Secrets → Actions:
+   - `CLOUDFLARE_API_TOKEN` - Your Cloudflare API token
+   - `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Push to main branch** - Deployment starts automatically!
+
+For detailed instructions, see:
+- [Deployment Guide](.github/DEPLOYMENT.md)
+- [Secrets Setup Guide](.github/SECRETS_SETUP.md)
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI + shadcn/ui
+- **Icons**: Lucide React
+- **State Management**: Zustand
+- **Build Tool**: Turbopack
+- **Deployment**: Cloudflare Pages
+
+## 📁 Project Structure
+
+```
+type-native/
+├── src/
+│   ├── app/              # Next.js pages and routes
+│   │   ├── page.tsx      # Home page
+│   │   ├── layout.tsx    # Root layout
+│   │   └── [language]-keyboard/  # Dynamic language pages
+│   ├── components/       # React components
+│   │   ├── editor/       # Text editor components
+│   │   ├── keyboard/     # Virtual keyboard components
+│   │   └── ui/           # UI components (shadcn/ui)
+│   ├── data/            # Data and configurations
+│   │   ├── layouts/     # Keyboard layout definitions (94 files)
+│   │   └── metadata/    # SEO metadata for each language
+│   ├── hooks/           # Custom React hooks
+│   ├── stores/          # Zustand stores
+│   └── types/           # TypeScript type definitions
+├── .github/
+│   ├── workflows/       # GitHub Actions
+│   ├── DEPLOYMENT.md    # Deployment guide
+│   └── SECRETS_SETUP.md # Secrets setup guide
+└── public/              # Static assets
+```
+
+## 🎯 Key Features Explained
+
+### Virtual Keyboard
+- Touch-friendly buttons for on-screen typing
+- Real-time shift/caps lock state
+- Physical keyboard integration
+
+### Physical Keyboard Mapping
+- Type using your physical keyboard
+- Automatic character mapping based on selected language
+- Works seamlessly with the virtual keyboard
+
+### Auto-save
+- Text automatically saved to browser localStorage
+- Persists across sessions
+- Per-language draft storage
+
+### Search Integration
+- Quick search on Google, YouTube, Amazon, and Twitter
+- Opens in new tab with your typed text
+- One-click copy to clipboard
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 Adding a New Language
+
+To add a new keyboard layout:
+
+1. Create a new layout file in `src/data/layouts/[language-code].ts`
+2. Add the layout to `src/data/layouts/index.ts`
+3. Add language info and metadata
+4. Create page routes for both English and French versions
+5. Run `npm run build` to verify
+
+See existing layouts for reference.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Next.js team for the amazing framework
+- Cloudflare for the free hosting
+- All contributors who helped build this project
+
+## 📞 Support
+
+If you have any questions or need help:
+- Open an issue on GitHub
+- Check the documentation in `.github/` folder
+
+---
+
+**Built with ❤️ by the Type-Native team**
+
+[Live Demo](https://type-native.pages.dev) | [Report Bug](https://github.com/yourusername/type-native/issues) | [Request Feature](https://github.com/yourusername/type-native/issues)
