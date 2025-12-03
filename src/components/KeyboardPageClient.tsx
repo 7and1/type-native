@@ -1,7 +1,9 @@
 'use client';
 
 import { EditorContainer } from '@/components/editor/EditorContainer';
+import { LanguageContent } from '@/components/content/LanguageContent';
 import type { KeyboardLayout, LanguageCode } from '@/types/keyboard';
+import type { LanguagePageContent } from '@/data/content/types';
 import { languageInfo } from '@/data/layouts';
 
 interface KeyboardPageClientProps {
@@ -9,6 +11,7 @@ interface KeyboardPageClientProps {
   uiLanguage: 'en' | 'fr';
   h1: string;
   intro: string;
+  content?: LanguagePageContent | null;
 }
 
 export function KeyboardPageClient({
@@ -16,6 +19,7 @@ export function KeyboardPageClient({
   uiLanguage,
   h1,
   intro,
+  content,
 }: KeyboardPageClientProps) {
   const info = languageInfo[layout.id]!;
 
@@ -99,6 +103,9 @@ export function KeyboardPageClient({
           </li>
         </ul>
       </section>
+
+      {/* Extended SEO Content - 1000+ words educational content */}
+      {content && <LanguageContent content={content} />}
     </main>
   );
 }

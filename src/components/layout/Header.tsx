@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Keyboard, Moon, Sun, Monitor } from 'lucide-react';
+import { Keyboard, Moon, Sun, Monitor, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/useAppStore';
 import { useEffect, useState } from 'react';
@@ -59,6 +59,23 @@ export function Header() {
         </Link>
 
         <nav className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              // Trigger AI chat event
+              const event = new CustomEvent('ai-question', {
+                detail: {
+                  question: 'Hi! I need help with the keyboard.'
+                }
+              });
+              window.dispatchEvent(event);
+            }}
+            className="flex items-center gap-2 px-3"
+          >
+            <MessageCircle className="h-4 w-4" />
+            <span className="hidden sm:inline">AI Help</span>
+          </Button>
           {mounted && (
             <Button
               variant="ghost"

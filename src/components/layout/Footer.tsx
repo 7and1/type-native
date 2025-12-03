@@ -48,8 +48,14 @@ export function Footer() {
           <p className="text-sm text-muted-foreground">
             {year} Type-Native. Free virtual keyboards for 20+ languages.
           </p>
-          <div className="flex gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-muted-foreground">
             <span>No tracking. No ads. Privacy-first.</span>
+            <a
+              href="mailto:hello@type-native.com"
+              className="text-foreground/70 hover:text-foreground transition-colors"
+            >
+              hello@type-native.com
+            </a>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { layouts, languageInfo } from '@/data/layouts';
 import { getPageMetadata } from '@/data/metadata';
 import { KeyboardPageClient } from '@/components/KeyboardPageClient';
 import { StructuredData } from '@/components/seo/StructuredData';
+import { getLanguageContentSync } from '@/data/content';
 
 const LANG_CODE = 'nl';
 const UI_LANG = 'en';
@@ -10,6 +11,7 @@ const UI_LANG = 'en';
 const layout = layouts[LANG_CODE]!;
 const info = languageInfo[LANG_CODE]!;
 const meta = getPageMetadata(LANG_CODE, UI_LANG);
+const content = getLanguageContentSync(LANG_CODE, UI_LANG);
 
 export const metadata: Metadata = {
   title: meta.title,
@@ -42,6 +44,7 @@ export default function Page() {
         uiLanguage={UI_LANG}
         h1={meta.h1}
         intro={meta.intro}
+        content={content}
       />
     </>
   );
