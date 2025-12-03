@@ -43,7 +43,7 @@ export function SimpleChatButton() {
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isTyping) return;
 
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: inputValue.trim(),
@@ -72,7 +72,7 @@ export function SimpleChatButton() {
 
       const data = await response.json();
 
-      const aiMessage = {
+      const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: data.response || 'Sorry, I encountered an error.',
@@ -82,7 +82,7 @@ export function SimpleChatButton() {
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
-      const errorMessage = {
+      const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: 'Sorry, I encountered an error. Please try again.',
