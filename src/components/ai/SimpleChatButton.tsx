@@ -247,12 +247,12 @@ export function SimpleChatButton() {
       <button
         onClick={() => setShowChat(true)}
         className={cn(
-          "fixed bottom-8 right-8 z-[99999] bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full p-6 shadow-2xl transition-all duration-300 hover:scale-110 border-2 border-white/20",
+          "fixed bottom-8 right-8 z-[99999] bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full p-7 shadow-2xl transition-all duration-300 hover:scale-110 border-2 border-white/20",
           showPrompt && "animate-bounce"
         )}
         type="button"
       >
-        <MessageCircle className="w-12 h-12" />
+        <MessageCircle className="w-14 h-14" />
         {showPrompt && (
           <div className="absolute -top-3 -right-3 bg-red-500 text-white text-sm rounded-full w-8 h-8 flex items-center justify-center animate-pulse border-2 border-white">
             !
