@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Available AI models from OpenRouter
-const AI_MODELS = [
-  'deepseek/deepseek-chat-v3-0324:free',
-  'meta-llama/llama-4-maverick:free',
-  'google/gemini-2.5-pro-exp-03-25:free',
-  'nousresearch/hermes-3-llama-3.1-405b:free',
-  'x-ai/grok-4-fast:free'
-];
+import { DEFAULT_AI_MODEL, isSupportedAIModel } from '@/data/ai/models';
 
 // System prompt for keyboard assistance
 const SYSTEM_PROMPT = `You are an expert AI assistant specializing in keyboards, typing, and languages. Your expertise includes:
@@ -34,16 +26,6 @@ Current context: User is on a multilingual keyboard website and may have questio
 - Technical keyboard issues
 
 Respond in a friendly, conversational tone. Focus on being helpful and educational rather than overly technical unless the user asks for technical details.`;
-
-// Common keyboard questions and categories for better AI responses
-const CATEGORIES = {
-  'typing-help': 'Questions about typing techniques, speed, ergonomics',
-  'keyboard-layouts': 'Questions about different keyboard layouts, layouts by language',
-  'learning-tips': 'Questions about language learning, practice methods',
-  'language-knowledge': 'Questions about languages, scripts, cultural context',
-  'technical-issues': 'Questions about technical problems, troubleshooting',
-  'general': 'General questions'
-};
 
 function detectCategory(message: string): string {
   const lowerMessage = message.toLowerCase();
@@ -79,7 +61,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!AI_MODELS.includes(model)) {
+    const targetModel = model && isSupportedAIModel(model) ? model : DEFAULT_AI_MODEL;
+    if (model && !isSupportedAIModel(model)) {
       return NextResponse.json(
         { error: 'Invalid model specified' },
         { status: 400 }
@@ -123,7 +106,7 @@ export async function POST(request: NextRequest) {
         'X-Title': 'Type-Native AI Assistant'
       },
       body: JSON.stringify({
-        model: model,
+        model: targetModel,
         messages: messages,
         temperature: 0.7,
         max_tokens: 1024,
@@ -157,7 +140,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       response: aiResponse,
       category: category,
-      model: model,
+      model: targetModel,
       usage: data.usage
     });
 

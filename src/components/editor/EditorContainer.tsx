@@ -7,7 +7,7 @@ import { KeyboardFrame } from '../keyboard/KeyboardFrame';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { useAppStore } from '@/stores/useAppStore';
-import type { KeyboardLayout, LanguageCode } from '@/types/keyboard';
+import type { KeyboardLayout } from '@/types/keyboard';
 
 interface EditorContainerProps {
   layout: KeyboardLayout;
@@ -18,17 +18,14 @@ export function EditorContainer({ layout }: EditorContainerProps) {
 
   // Get saved draft from store
   const { getDraft, setDraft, clearDraft, addRecentKeyboard } = useAppStore();
-  const savedText = getDraft(layout.id);
 
   // Local text state
-  const [text, setText] = useState(savedText);
+  const [text, setText] = useState(() => getDraft(layout.id));
 
-  // Load saved draft on mount and when layout changes
+  // Track recently opened keyboards without touching component state
   useEffect(() => {
-    const draft = getDraft(layout.id);
-    setText(draft);
     addRecentKeyboard(layout.id);
-  }, [layout.id, getDraft, addRecentKeyboard]);
+  }, [layout.id, addRecentKeyboard]);
 
   // Auto-save with debounce
   useAutoSave({

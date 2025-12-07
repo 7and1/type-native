@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -26,7 +26,7 @@ export function AIChatButton({ className }: AIChatButtonProps) {
   const [showPrompt, setShowPrompt] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const welcomeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Show prompt after 15 seconds
   useEffect(() => {
@@ -36,6 +36,35 @@ export function AIChatButton({ className }: AIChatButtonProps) {
     }, 15000);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (welcomeTimerRef.current) {
+        clearTimeout(welcomeTimerRef.current);
+        welcomeTimerRef.current = null;
+      }
+    };
+  }, []);
+
+  const triggerWelcomeMessage = useCallback(() => {
+    setShowWelcome(true);
+    if (welcomeTimerRef.current) {
+      clearTimeout(welcomeTimerRef.current);
+    }
+    welcomeTimerRef.current = setTimeout(() => {
+      setShowWelcome(false);
+      welcomeTimerRef.current = null;
+    }, 5000);
+  }, []);
+
+  const handleCloseChat = useCallback(() => {
+    setShowChat(false);
+    setShowWelcome(false);
+    if (welcomeTimerRef.current) {
+      clearTimeout(welcomeTimerRef.current);
+      welcomeTimerRef.current = null;
+    }
   }, []);
 
   const quickStartQuestions = [
@@ -98,12 +127,12 @@ export function AIChatButton({ className }: AIChatButtonProps) {
               >
                 {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowChat(false)}
-                className="text-white hover:bg-white/20 p-1"
-              >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCloseChat}
+                    className="text-white hover:bg-white/20 p-1"
+                  >
                 <X className="w-4 h-4" />
               </Button>
             </div>
@@ -171,7 +200,7 @@ export function AIChatButton({ className }: AIChatButtonProps) {
                     </h3>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    I'm your AI assistant here to help with keyboard questions,
+                    I&apos;m your AI assistant here to help with keyboard questions,
                     typing tips, and language learning. How can I assist you today?
                   </p>
                 </div>
@@ -237,7 +266,7 @@ export function AIChatButton({ className }: AIChatButtonProps) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          console.log('Chat button clicked!');
+          triggerWelcomeMessage();
           setShowChat(true);
         }}
         type="button"

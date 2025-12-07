@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, X, Brain, Sparkles, Send, Minimize2, Maximize2, ThumbsUp, ThumbsDown, Bookmark, Copy, Check, Loader2, RefreshCw } from 'lucide-react';
+import { MessageCircle, X, Brain, Sparkles, Send, Minimize2, Maximize2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { DEFAULT_AI_MODEL } from '@/data/ai/models';
 
 interface Message {
   id: string;
@@ -62,7 +63,7 @@ export function SimpleChatButton() {
         },
         body: JSON.stringify({
           message: inputValue.trim(),
-          model: 'deepseek/deepseek-chat-v3-0324:free',
+          model: DEFAULT_AI_MODEL,
           context: {
             currentLanguage: window.location.pathname,
             url: window.location.href
@@ -71,6 +72,19 @@ export function SimpleChatButton() {
       });
 
       const data = await response.json();
+
+      // Handle API errors (non-2xx responses)
+      if (!response.ok) {
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.response || data.error || 'Sorry, the AI service is temporarily unavailable. Please try again later.',
+          timestamp: new Date(),
+          category: 'error'
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        return;
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -82,6 +96,7 @@ export function SimpleChatButton() {
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
+      console.error('Simple chat request failed', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',

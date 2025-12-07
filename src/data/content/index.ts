@@ -1,6 +1,21 @@
 import type { LanguagePageContent } from './types';
 import type { LanguageCode } from '@/types/keyboard';
 
+type ContentModule = {
+  default?: LanguagePageContent;
+  content?: LanguagePageContent;
+};
+
+const eagerContentModules = import.meta.glob<ContentModule>(
+  './{en,fr}/*.ts',
+  { eager: true }
+);
+
+const resolveContentModule = (mod?: ContentModule) => {
+  if (!mod) return null;
+  return mod.default || mod.content || null;
+};
+
 /**
  * Get language content for a specific language and UI language
  *
@@ -26,11 +41,11 @@ export async function getLanguageContent(
   try {
     // Dynamic import enables code splitting
     // Only this specific language's content is loaded
-    const module = await import(`./${uiLang}/${code}`);
-    return module.default || module.content;
+    const contentModule = await import(`./${uiLang}/${code}`);
+    return contentModule.default || (contentModule as ContentModule).content || null;
   } catch (error) {
     // Content file doesn't exist yet (normal during phased rollout)
-    console.warn(`Content not found for ${code} (${uiLang})`);
+    console.warn(`Content not found for ${code} (${uiLang})`, error);
     return null;
   }
 }
@@ -55,15 +70,9 @@ export function getLanguageContentSync(
   code: LanguageCode,
   uiLang: 'en' | 'fr'
 ): LanguagePageContent | null {
-  try {
-    // Synchronous require for build-time imports
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const module = require(`./${uiLang}/${code}`);
-    return module.default || module.content;
-  } catch (error) {
-    // Content file doesn't exist yet (normal during phased rollout)
-    return null;
-  }
+  const key = `./${uiLang}/${code}.ts`;
+  const mod = eagerContentModules[key];
+  return resolveContentModule(mod) ?? null;
 }
 
 /**
@@ -77,10 +86,6 @@ export function hasContent(
   code: LanguageCode,
   uiLang: 'en' | 'fr'
 ): boolean {
-  try {
-    require.resolve(`./${uiLang}/${code}`);
-    return true;
-  } catch {
-    return false;
-  }
+  const key = `./${uiLang}/${code}.ts`;
+  return Boolean(eagerContentModules[key]);
 }

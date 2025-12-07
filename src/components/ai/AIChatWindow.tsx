@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { DEFAULT_AI_MODEL, FREE_AI_MODELS } from '@/data/ai/models';
 import {
   User,
   Bot,
@@ -14,7 +15,6 @@ import {
   Loader2,
   RefreshCw,
   ThumbsUp,
-  ThumbsDown,
   Bookmark
 }
 from 'lucide-react';
@@ -36,7 +36,7 @@ export function AIChatWindow({ className }: AIChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState('deepseek/deepseek-chat-v3-0324:free');
+  const [selectedModel, setSelectedModel] = useState(DEFAULT_AI_MODEL);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages are added
@@ -44,18 +44,7 @@ export function AIChatWindow({ className }: AIChatWindowProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Listen for AI question events
-  useEffect(() => {
-    const handleQuestion = (event: CustomEvent) => {
-      const { question } = event.detail;
-      handleSendMessage(question);
-    };
-
-    window.addEventListener('ai-question', handleQuestion as EventListener);
-    return () => window.removeEventListener('ai-question', handleQuestion as EventListener);
-  }, []);
-
-  const handleSendMessage = async (question: string) => {
+  const handleSendMessage = useCallback(async (question: string) => {
     if (!question.trim() || isTyping) return;
 
     // Add user message
@@ -122,7 +111,18 @@ export function AIChatWindow({ className }: AIChatWindowProps) {
     } finally {
       setIsTyping(false);
     }
-  };
+  }, [isTyping, selectedModel]);
+
+  // Listen for AI question events
+  useEffect(() => {
+    const handleQuestion = (event: CustomEvent) => {
+      const { question } = event.detail;
+      handleSendMessage(question);
+    };
+
+    window.addEventListener('ai-question', handleQuestion as EventListener);
+    return () => window.removeEventListener('ai-question', handleQuestion as EventListener);
+  }, [handleSendMessage]);
 
   const handleCopyMessage = async (content: string, messageId: string) => {
     try {
@@ -329,11 +329,11 @@ export function AIChatWindow({ className }: AIChatWindowProps) {
               onChange={(e) => setSelectedModel(e.target.value)}
               className="text-xs bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek Chat</option>
-              <option value="meta-llama/llama-4-maverick:free">Llama 4</option>
-              <option value="google/gemini-2.5-pro-exp-03-25:free">Gemini 2.5 Pro</option>
-              <option value="nousresearch/hermes-3-llama-3.1-405b:free">Hermes 405B</option>
-              <option value="x-ai/grok-4-fast:free">Grok 4 Fast</option>
+              {FREE_AI_MODELS.map((model) => (
+                <option key={model.id} value={model.id}>
+                  {model.label}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex items-center gap-2">

@@ -2,7 +2,7 @@
 
 import { EditorContainer } from '@/components/editor/EditorContainer';
 import { LanguageContent } from '@/components/content/LanguageContent';
-import type { KeyboardLayout, LanguageCode } from '@/types/keyboard';
+import type { KeyboardLayout } from '@/types/keyboard';
 import type { LanguagePageContent } from '@/data/content/types';
 import { languageInfo } from '@/data/layouts';
 
@@ -37,7 +37,7 @@ export function KeyboardPageClient({
 
       {/* Main Editor */}
       <section className="mb-8 sm:mb-12">
-        <EditorContainer layout={layout} />
+        <EditorContainer key={layout.id} layout={layout} />
       </section>
 
       {/* Language Info Section */}

@@ -57,11 +57,14 @@ npm run dev
 
 ## 🔧 Available AI Models
 
-1. **DeepSeek Chat** - Fast and efficient
-2. **Llama 4 Maverick** - Advanced reasoning
-3. **Gemini 2.5 Pro** - Google's latest model
-4. **Hermes 405B** - Large context window
-5. **Grok 4 Fast** - xAI's conversational model
+The project ships with the free models verified on 2025-12-04 (see `/Volumes/SSD/AI/OpenRouter/OPENROUTER_FREE_MODELS_API.md`). All of them can be selected inside the chat UI:
+
+1. **Gemini 2.0 Flash (Free)** – 1M-token context, excellent all-round assistant *(default)*
+2. **Llama 3.3 70B Instruct (Free)** – 70B parameter reasoning powerhouse
+3. **Qwen3 Coder (Free)** – Coding-optimized, 262k token memory
+4. **DeepSeek R1T Chimera (Free)** – Built-in chain-of-thought for math & logic
+5. **Gemma 3 Nano E2B (Free)** – Ultra-low latency helper for quick questions
+6. **Hermes 3 Llama 405B (Free)** – Giant 405B model for hard or nuanced prompts
 
 ## 📱 Sample Questions
 

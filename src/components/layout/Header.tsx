@@ -4,36 +4,39 @@ import Link from 'next/link';
 import { Keyboard, Moon, Sun, Monitor, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/useAppStore';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export function Header() {
   const { theme, setTheme } = useAppStore();
-  const [mounted, setMounted] = useState(false);
-
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Apply theme
   useEffect(() => {
-    if (!mounted) return;
+    if (typeof document === 'undefined') return;
 
+    const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'light') {
-      root.classList.remove('dark');
-    } else {
-      // System preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
+
+    const applyTheme = () => {
+      if (theme === 'dark') {
         root.classList.add('dark');
-      } else {
+      } else if (theme === 'light') {
         root.classList.remove('dark');
+      } else {
+        if (prefersDarkQuery.matches) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
       }
+    };
+
+    applyTheme();
+
+    if (theme === 'system') {
+      prefersDarkQuery.addEventListener('change', applyTheme);
+      return () => prefersDarkQuery.removeEventListener('change', applyTheme);
     }
-  }, [theme, mounted]);
+  }, [theme]);
 
   const cycleTheme = () => {
     if (theme === 'light') {
@@ -76,18 +79,16 @@ export function Header() {
             <MessageCircle className="h-4 w-4" />
             <span className="hidden sm:inline">AI Help</span>
           </Button>
-          {mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={cycleTheme}
-              aria-label={`Switch to ${
-                theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'
-              } mode`}
-            >
-              <ThemeIcon className="h-5 w-5" />
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={cycleTheme}
+            aria-label={`Switch to ${
+              theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'
+            } mode`}
+          >
+            <ThemeIcon className="h-5 w-5" />
+          </Button>
         </nav>
       </div>
     </header>

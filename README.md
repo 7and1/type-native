@@ -76,6 +76,21 @@ npm run build
 # The static files will be in the 'out' directory
 ```
 
+### Testing
+
+```bash
+# Run the Vitest + Testing Library suite once
+npm test
+
+# Watch for changes during development
+npm run test:watch
+
+# Generate coverage reports (text + HTML)
+npm run test:coverage
+```
+
+Aim to exercise at least one LTR layout, one RTL layout, and one CJK layout manually whenever UI changes touch the keyboards.
+
 ## 📦 Deployment
 
 This project is configured for automatic deployment to Cloudflare Pages via GitHub Actions.
